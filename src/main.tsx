@@ -4,6 +4,7 @@ import { supabase, UNO_FUNCTION_URL } from './lib/supabase';
 import './styles.css';
 import type { UnoCard } from './lib/games/uno/rules';
 import { isMyTurn } from './lib/games/uno/view-model';
+import { extractUnoState } from './lib/games/uno/response';
 import { getWeeklyTheme } from './lib/theme';
 
 type User = { id: string; email?: string };
@@ -101,9 +102,17 @@ function Uno({ user, theme }: { user: User; theme: ReturnType<typeof getWeeklyTh
       setBusy(true);
       setError('');
       const j = await api(user, action, data);
-      if (j.state) setState(j.state);
+      // Accept both { state: {...} } and top-level state shapes from the edge function.
+      const nextState = extractUnoState(j);
+      if (nextState) setState(nextState as State);
       if (j.roomId) setRoomId(j.roomId);
       if (j.code) setCode(j.code);
+      // After join (which may return only roomId/code), immediately refresh full state.
+      if (action === 'join' && j.roomId && !nextState) {
+        const s = await api(user, 'state', { roomId: j.roomId });
+        const joined = extractUnoState(s);
+        if (joined) setState(joined as State);
+      }
       return j;
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong');
