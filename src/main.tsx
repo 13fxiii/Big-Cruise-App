@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { supabase, UNO_FUNCTION_URL } from './lib/supabase';
 import './styles.css';
 import type { UnoCard } from './lib/games/uno/rules';
+import { isMyTurn } from './lib/games/uno/view-model';
 import { getWeeklyTheme } from './lib/theme';
 
 type User = { id: string; email?: string };
@@ -139,6 +140,7 @@ function Uno({ user, theme }: { user: User; theme: ReturnType<typeof getWeeklyTh
 
   const me = state.players.find(p => p.id === user.id);
   const current = state.players[state.currentPlayerIndex];
+  const myTurn = isMyTurn(state, user.id);
   const top = state.discardPile.at(-1);
   const hand = me?.hand || [];
 
@@ -167,23 +169,23 @@ function Uno({ user, theme }: { user: User; theme: ReturnType<typeof getWeeklyTh
     </header>
     <section className="table">
       <div className="seats">
-        {state.players.map((p, i) => <div className={`seat ${i === state.currentPlayerIndex ? 'active' : ''}`} key={p.id}>
+        {state.players.map((p, i) => <div className={`seat ${i === state.currentPlayerIndex && state.phase === 'playing' ? 'active' : ''}`} key={p.id}>
           <div className="avatar">{p.displayName.slice(0, 1).toUpperCase()}</div>
-          <div><b>{p.displayName}</b><span>{p.handCount} cards {i === state.currentPlayerIndex ? '• TURN' : ''}</span></div>
+          <div><b>{p.displayName}</b><span>{p.handCount} cards {i === state.currentPlayerIndex && state.phase === 'playing' ? '• TURN' : ''}</span></div>
         </div>)}
       </div>
       <div className="center">
-        <button className="pile draw" onClick={() => run('draw', { roomId })} disabled={current.id !== user.id || busy} aria-label="Draw a card">
+        <button className="pile draw" onClick={() => run('draw', { roomId })} disabled={!myTurn || busy} aria-label="Draw a card">
           {state.drawPileCount}<small>DRAW</small>
         </button>
         {top && <div className="card big" style={{ background: colorMap[top.color] }} aria-label={`Top card ${label(top)}`}><span>{label(top)}</span></div>}
         <div className="status">
-          {state.phase === 'finished' ? `${state.players.find(p => p.id === state.winnerId)?.displayName || 'Someone'} wins!` : current.id === user.id ? 'YOUR TURN' : `${current.displayName}'s turn`}
-          <small>COLOR: {state.currentColor.toUpperCase()}</small>
+          {state.phase === 'lobby' ? 'WAITING FOR PLAYERS' : state.phase === 'finished' ? `${state.players.find(p => p.id === state.winnerId)?.displayName || 'Someone'} wins!` : myTurn ? 'YOUR TURN' : `${current?.displayName || 'Opponent'}'s turn`}
+          <small>{state.phase === 'lobby' ? `${state.players.length}/4 PLAYERS` : `COLOR: ${state.currentColor.toUpperCase()}`}</small>
         </div>
       </div>
       <div className="hand" aria-label="Your hand">
-        {hand.map(c => <button key={c.id} className="card" style={{ background: colorMap[c.color] }} onClick={() => play(c)} disabled={current.id !== user.id || busy} aria-label={`Play ${label(c)}`}>
+        {hand.map(c => <button key={c.id} className="card" style={{ background: colorMap[c.color] }} onClick={() => play(c)} disabled={!myTurn || busy} aria-label={`Play ${label(c)}`}>
           <span>{label(c)}</span>
         </button>)}
       </div>
