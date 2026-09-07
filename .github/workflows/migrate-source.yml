@@ -1,0 +1,37 @@
+name: Migrate Big Cruise source
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [migration/source]
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical repo
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Clone working source
+        run: git clone --depth 1 https://github.com/13fxiii/big-cruise-app-7a76c362.git /tmp/source
+
+      - name: Replace canonical contents with working source
+        run: |
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            /tmp/source/ ./
+
+      - name: Commit migrated source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m "Migrate working Big Cruise app source"
+          git push origin HEAD:migration/source
