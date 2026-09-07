@@ -7,12 +7,13 @@ export type WeeklyTheme = {
   accentSoft: string;
   icon: string;
   typeClass: string;
+  brandBase: string;
   description: string;
   challenge: string;
   featuredGames: string[];
 };
 
-const base = { accent: '#ffd400', accentStrong: '#ffe45c', accentSoft: '#ffd40022', typeClass: 'theme-default' };
+const base = { accent: '#ffd400', accentStrong: '#ffe45c', accentSoft: '#ffd40022', typeClass: 'theme-default', brandBase: '#ffd400' };
 const themes: WeeklyTheme[] = [
   { id:'mcm', shortLabel:'MCM', displayName:'Men Crush Monday', ...base, icon:'♥︎', description:'Celebrate the men making the Cruise move.', challenge:'Play a game with your crew and drop a shoutout.', featuredGames:['uno','chess'] },
   { id:'titty-tuesday', shortLabel:'TUESDAY', displayName:'Titty Tuesday', ...base, icon:'🍑', description:'The internet gets unserious.', challenge:'Complete today’s community challenge.', featuredGames:['uno','truth-or-dare'] },
