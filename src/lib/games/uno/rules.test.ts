@@ -17,6 +17,8 @@ const stateWith = (cards0: Parameters<typeof playCard>[0]['players'][number]['ha
   state.players[0].hand = cards0;
   state.players[1].hand = cards1;
   state.currentPlayerIndex = 0;
+  state.currentColor = 'red';
+  state.discardPile = [{ id: 'top', color: 'red', kind: 'number', value: 9 }];
   state.pendingUnoPlayerId = undefined;
   return state;
 };
@@ -50,7 +52,6 @@ test('normal number cards hand the turn to the next player', () => {
     { id: 'a', color: 'red', kind: 'number', value: 2 },
     { id: 'b', color: 'blue', kind: 'number', value: 7 },
   ], [{ id: 'c', color: 'green', kind: 'number', value: 5 }]);
-  state.discardPile = [{ id: 'top', color: 'red', kind: 'number', value: 9 }];
   playCard(state, '0', 'a');
   assert.equal(state.currentPlayerIndex, 1);
   assert.equal(state.players[0].hand.length, 1);
@@ -61,7 +62,6 @@ test('skip skips exactly one player', () => {
     { id: 'a', color: 'red', kind: 'skip' },
     { id: 'b', color: 'red', kind: 'number', value: 2 },
   ], [{ id: 'c', color: 'blue', kind: 'number', value: 3 }]);
-  state.discardPile = [{ id: 'top', color: 'red', kind: 'number', value: 9 }];
   playCard(state, '0', 'a');
   assert.equal(state.currentPlayerIndex, 0);
 });
@@ -71,6 +71,7 @@ test('reverse changes direction and gives turn to the previous player', () => {
   state.players[0].hand = [{ id: 'a', color: 'red', kind: 'reverse' }];
   state.players[1].hand = [{ id: 'b', color: 'blue', kind: 'number', value: 2 }];
   state.players[2].hand = [{ id: 'c', color: 'green', kind: 'number', value: 3 }];
+  state.currentColor = 'red';
   state.discardPile = [{ id: 'top', color: 'red', kind: 'number', value: 9 }];
   playCard(state, '0', 'a');
   assert.equal(state.direction, -1);
@@ -82,7 +83,6 @@ test('+2 makes the next player draw two and then passes the turn', () => {
     { id: 'a', color: 'red', kind: 'draw2' },
     { id: 'b', color: 'red', kind: 'number', value: 2 },
   ], [{ id: 'c', color: 'blue', kind: 'number', value: 3 }]);
-  state.discardPile = [{ id: 'top', color: 'red', kind: 'number', value: 9 }];
   const before = state.players[1].hand.length;
   playCard(state, '0', 'a');
   assert.equal(state.players[1].hand.length, before + 2);
@@ -94,7 +94,6 @@ test('wild requires a chosen color and applies it', () => {
     { id: 'a', color: 'wild', kind: 'wild' },
     { id: 'b', color: 'red', kind: 'number', value: 2 },
   ], [{ id: 'c', color: 'blue', kind: 'number', value: 3 }]);
-  state.discardPile = [{ id: 'top', color: 'yellow', kind: 'number', value: 9 }];
   assert.throws(() => playCard(state, '0', 'a'), /Choose a color/);
   playCard(state, '0', 'a', 'blue');
   assert.equal(state.currentColor, 'blue');
@@ -105,7 +104,6 @@ test('wild draw four is illegal when the player has the current color', () => {
     { id: 'a', color: 'wild', kind: 'wild4' },
     { id: 'b', color: 'red', kind: 'number', value: 2 },
   ], [{ id: 'c', color: 'blue', kind: 'number', value: 3 }]);
-  state.discardPile = [{ id: 'top', color: 'red', kind: 'number', value: 9 }];
   assert.throws(() => playCard(state, '0', 'a', 'blue'), /Wild Draw Four is not legal/);
 });
 
@@ -129,7 +127,6 @@ test('playing the last card finishes the game with a winner', () => {
   const state = stateWith([
     { id: 'a', color: 'red', kind: 'number', value: 2 },
   ], [{ id: 'c', color: 'blue', kind: 'number', value: 4 }]);
-  state.discardPile = [{ id: 'top', color: 'red', kind: 'number', value: 9 }];
   playCard(state, '0', 'a');
   assert.equal(state.phase, 'finished');
   assert.equal(state.winnerId, '0');
