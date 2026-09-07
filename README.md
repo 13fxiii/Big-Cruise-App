@@ -31,3 +31,7 @@ npm run build
 ```
 
 Ludo is intentionally not part of this release. UNO must be verified in real multiplayer first.
+
+## Deployment
+
+The canonical GitHub repository is `13fxiii/Big-Cruise-App` and the existing BIG CRUISE〽️ Vercel project is used for deployment. Supabase remains the backend and hosts the authenticated `uno` Edge Function.
