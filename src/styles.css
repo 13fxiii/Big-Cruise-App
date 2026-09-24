@@ -117,3 +117,15 @@ button.link:hover:not(:disabled){background:transparent;color:#fff0a3}
   button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid CanvasText}
   .bottom-nav button.selected,.seat.active,.ludo-piece:not(:disabled){outline:2px solid Highlight}
 }
+
+.chess-shell{margin-top:12px;padding:14px;border:1px solid var(--bc-border);border-radius:28px;background:linear-gradient(145deg,#111,#090909);box-shadow:0 18px 50px #0003}
+.chess-board{width:min(94vw,560px);aspect-ratio:1;margin:18px auto;display:grid;grid-template-columns:repeat(8,1fr);border:5px solid #262626;border-radius:16px;overflow:hidden;box-shadow:0 18px 42px #0009;touch-action:manipulation}
+.chess-square{position:relative;display:grid;place-items:center;min-width:0;min-height:0;padding:0;border:0;border-radius:0;color:#151515;background:#e8d6b0}
+.chess-square.dark{background:#9f7652}
+.chess-square.selected{box-shadow:inset 0 0 0 4px var(--bc-accent)}
+.chess-square.legal::after{content:"";width:25%;height:25%;border-radius:50%;background:#ffd400aa;box-shadow:0 0 0 3px #ffd40033}
+.chess-square.legal:has(.chess-piece)::after{width:82%;height:82%;background:transparent;border:4px solid #ffd400cc;box-shadow:none}
+.chess-piece{position:relative;z-index:1;font-size:clamp(28px,8vw,58px);line-height:1;text-shadow:0 2px 1px #0007;pointer-events:none}
+.chess-piece.white{color:#fffaf0}.chess-piece.black{color:#171717;text-shadow:0 1px 0 #fff5,0 3px 3px #0008}
+.chess-help{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--bc-text-muted);font-size:12px}
+@media(max-width:650px){.chess-shell{margin-inline:-4px;padding:10px;border-radius:22px}.chess-board{width:min(97vw,560px);border-width:3px}.chess-help{padding-inline:2px;font-size:11px}}

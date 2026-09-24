@@ -3,7 +3,7 @@ export type CruiseGame = { id: string; name: string; icon: string; description: 
 
 export const GAMES: CruiseGame[] = [
   { id: 'uno', name: 'UNO', icon: '🃏', description: 'Real-time card battles with your Cruise crew.', status: 'playable', accent: '#ff3b30', featuredDays: ['mcm','titty-tuesday','wild-n-out-sunday'] },
-  { id: 'ludo', name: 'Ludo', icon: '🎲', description: 'Race your pieces home and take the Cruise.', status: 'coming-soon', accent: '#ffd400', featuredDays: ['throwback-thursday'] },
+  { id: 'ludo', name: 'Ludo', icon: '🎲', description: 'Race your pieces home and take the Cruise.', status: 'playable', accent: '#ffd400', featuredDays: ['throwback-thursday'] },
   { id: 'werewolf', name: 'Werewolf', icon: '🐺', description: 'Lie, investigate and survive the night.', status: 'coming-soon', accent: '#7c3aed', featuredDays: ['wild-n-out-sunday'] },
   { id: 'chess', name: 'Chess', icon: '♟️', description: 'Classic strategy, BIG CRUISE style.', status: 'coming-soon', accent: '#e5e7eb', featuredDays: ['mcm'] },
   { id: 'draw-it-out', name: 'Draw It Out', icon: '🎨', description: 'Draw fast. Guess faster. Make noise.', status: 'coming-soon', accent: '#06b6d4', featuredDays: ['wcw'] },
