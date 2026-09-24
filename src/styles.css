@@ -164,7 +164,7 @@ button{min-width:var(--tap-size);min-height:var(--tap-size)}
 .app-header{padding-left:var(--safe-inline);padding-right:var(--safe-inline-right)}
 .page{width:100%;padding-left:var(--safe-inline);padding-right:var(--safe-inline-right)}
 .auth{padding-left:var(--safe-inline);padding-right:var(--safe-inline-right)}
-.bottom-nav{padding-left:var(--safe-inline);padding-right:var(--safe-inline-right);padding-bottom:max(7px,env(safe-area-inset-bottom))}
+.bottom-nav{grid-template-columns:repeat(6,1fr);padding-left:var(--safe-inline);padding-right:var(--safe-inline-right);padding-bottom:max(7px,env(safe-area-inset-bottom))}
 .game-grid,.game-grid.all,.product-grid{grid-template-columns:1fr}
 .mode-grid{grid-template-columns:1fr}
 .ttt-board button{min-height:var(--tap-size)}
@@ -174,6 +174,7 @@ button{min-width:var(--tap-size);min-height:var(--tap-size)}
 .party-options button{text-align:left;min-height:52px}
 .connect-board,.ttt-board,.ludo-board,.chess-board{touch-action:manipulation}
 .draw-canvas{max-width:100%;touch-action:none}
+.profile-page{padding-bottom:100px}.profile-hero{padding:18px 0 10px}.profile-hero h1{margin:6px 0 3px;font-size:56px;letter-spacing:-.08em}.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}.profile-stats span{padding:13px 8px;border:1px solid #ffd40033;border-radius:16px;background:#ffd40008;text-align:center}.profile-stats b,.profile-stats small{display:block}.profile-stats b{color:#ffd400;font-size:18px}.profile-stats small{margin-top:4px;color:#999;font-size:9px;letter-spacing:.08em}.cruise-id-preview{display:block;width:100%;border:1px solid #ffd40066;border-radius:22px;box-shadow:0 18px 45px #0008}.profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:15px 0}.profile-actions a{display:grid;place-items:center;text-decoration:none;text-align:center}.scanner-modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;background:#000c}.scanner-card{width:min(100%,520px);padding:17px;border:1px solid #ffd40066;border-radius:24px;background:#0b0b0b}.qr-video{display:block;width:100%;aspect-ratio:1;border-radius:18px;background:#000;object-fit:cover;margin:12px 0}
 .modal-backdrop{padding:calc(12px + env(safe-area-inset-top)) var(--safe-inline) calc(12px + env(safe-area-inset-bottom)) var(--safe-inline)}
 .modal{max-height:calc(100svh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow:auto}
 .game-card:hover:not(:disabled),.mode-grid button:hover:not(:disabled),.ttt-board button:not(:disabled):hover{transform:none}

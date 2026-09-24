@@ -1,0 +1,4 @@
+type FeedbackKind='tap'|'success'|'error';
+let audio:AudioContext|null=null;
+function context(){if(typeof window==='undefined')return null;try{return audio||(audio=new AudioContext())}catch{return null}}
+export function touchFeedback(kind:FeedbackKind='tap'){if(typeof navigator!=='undefined'&&'vibrate' in navigator){const pattern=kind==='success'?[12,25,12]:kind==='error'?[35,25,35]:12;navigator.vibrate(pattern)}const ctx=context();if(!ctx)return;const oscillator=ctx.createOscillator();const gain=ctx.createGain();const now=ctx.currentTime;oscillator.type=kind==='error'?'sawtooth':'sine';oscillator.frequency.value=kind==='success'?660:kind==='error'?130:240;gain.gain.setValueAtTime(0.0001,now);gain.gain.exponentialRampToValueAtTime(0.025,now+0.006);gain.gain.exponentialRampToValueAtTime(0.0001,now+0.055);oscillator.connect(gain).connect(ctx.destination);oscillator.start(now);oscillator.stop(now+0.06)}
