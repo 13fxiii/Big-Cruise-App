@@ -219,4 +219,5 @@ button{min-width:var(--tap-size);min-height:var(--tap-size)}
 .lobby-status{font-size:9px;font-weight:950;letter-spacing:.1em;color:var(--bc-accent)}
 .lobby-footer{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:18px;color:#aaa;font-size:12px}
 .connection-dot{width:8px;height:8px;border-radius:50%;background:#ffd400;box-shadow:0 0 0 4px #ffd40020;animation:arcade-pulse 1.4s ease-in-out infinite}
+.bot-difficulty-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:20px}.bot-difficulty-grid button{display:grid;gap:4px;min-height:74px;text-align:left}.bot-difficulty-grid button.selected{background:#ffd400;color:#050505;border-color:#ffd400;box-shadow:0 6px 0 #8c7600}.bot-difficulty-grid button.selected small{color:#3b3200}.bot-difficulty-grid strong{font-size:15px}.bot-difficulty-grid small{color:#999;font-size:10px}
 @media(max-width:650px){.matchmaking-shell .room-head h1{font-size:39px}.room-code-card strong{font-size:clamp(30px,11vw,48px)}.lobby-player{min-height:64px}}
