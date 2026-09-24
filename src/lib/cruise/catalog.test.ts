@@ -9,7 +9,7 @@ test('catalog contains all twelve in-app games', () => {
 
 test('catalog marks only implemented games as playable', () => {
   assert.equal(GAMES.find(g => g.id === 'uno')?.status, 'playable');
-  assert.equal(GAMES.filter(g => g.status === 'playable').length, 6);
+  assert.equal(GAMES.filter(g => g.status === 'playable').length, 12);
 });
 
 test('merch is an in-app destination', () => {
