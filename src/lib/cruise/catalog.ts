@@ -14,6 +14,10 @@ export const GAMES: CruiseGame[] = [
   { id: 'karaoke', name: 'Karaoke', icon: '🎤', description: 'Grab the mic and embarrass your friends.', status: 'playable', accent: '#ec4899', featuredDays: ['friday-nmf'] },
   { id: 'truth-or-dare', name: 'Truth or Dare', icon: '🔥', description: 'Questions, dares and community chaos.', status: 'playable', accent: '#ef4444', featuredDays: ['titty-tuesday','wild-n-out-sunday'] },
   { id: 'kahoot', name: 'Kahoot', icon: '🧠', description: 'Fast quizzes for the whole community.', status: 'playable', accent: '#8b5cf6', featuredDays: ['friday-nmf'] },
+  { id: 'othello', name: 'Othello', icon: '⚫', description: 'Flip the board with patient Cruise Bot strategy.', status: 'playable', accent: '#22c55e', featuredDays: ['dominion-state'] },
+  { id: 'gomoku', name: 'Gomoku', icon: '✕', description: 'Build five in a line before the bot does.', status: 'playable', accent: '#f97316', featuredDays: ['dominion-state'] },
+  { id: 'mancala', name: 'Mancala', icon: '🟤', description: 'Count the moves and own the pits.', status: 'playable', accent: '#c08457', featuredDays: ['echo-era'] },
+  { id: 'word-hunt', name: 'Word Hunt', icon: '🔎', description: 'Trace words across a compact mobile board.', status: 'playable', accent: '#3dfff2', featuredDays: ['play-your-vibe'] },
 ];
 
 export const MERCH_NAV = { id: 'merch', name: 'Merch', icon: '🛍️' } as const;

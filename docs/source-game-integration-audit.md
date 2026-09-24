@@ -22,3 +22,11 @@ Werewolf roles, Codenames keys, and party scores must be sanitized per player an
 ## Release gates
 
 Before production promotion, run dependency audit and CodeQL, test the room state under simultaneous taps and reconnects, test the six-party mobile layouts at narrow portrait widths, verify keyboard/screen-reader labels, and perform a real two-device room test over a mobile network.
+
+## Kahoot and Game Pigeon Solver follow-up
+
+The Kahoot repository is an exploit and automation toolkit. Its flood, credential, nickname-injection, malformed-packet, and historical XSS paths were not integrated. BIG CRUISE uses only a clean-room quiz state model: timed questions, large answer targets, deterministic scoring, and a bounded local game flow.
+
+The Game Pigeon Solvers repository is an unlicensed terminal AI/solver toolkit with no mobile UI, multiplayer transport, or safe dependency manifest. BIG CRUISE uses only clean-room strategy concepts and ships mobile-native Othello, Gomoku, Mancala, and Word Hunt surfaces. The solver code, screenshots, Game Pigeon branding, word lists, dynamic imports, and plaintext saves were not copied.
+
+Both additions are currently mobile-first local play surfaces. Competitive multiplayer should be added only after each rules engine is moved behind the existing server-authoritative room model with versioned moves, replay protection, worker-bounded bot search, and explicit content/license provenance.
