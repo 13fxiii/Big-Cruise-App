@@ -19,3 +19,10 @@ test('mobile-first game surfaces use phone-safe defaults', () => {
   assert.match(css, /touch-action:manipulation/);
   assert.match(css, /max\(12px,env\(safe-area-inset-left\)\)/);
 });
+
+test('mobile matchmaking surfaces have compact room and lobby contracts', () => {
+  assert.match(css, /matchmaking-options/);
+  assert.match(css, /room-code-card/);
+  assert.match(css, /lobby-player/);
+  assert.match(css, /connection-dot/);
+});

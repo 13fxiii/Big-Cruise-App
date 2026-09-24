@@ -197,3 +197,26 @@ button{min-width:var(--tap-size);min-height:var(--tap-size)}
   .mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .page{padding-top:28px}
 }
+
+.matchmaking-shell{max-width:620px}
+.matchmaking-options{display:grid;gap:10px;margin-top:22px}
+.matchmaking-options button{display:grid;gap:3px;min-height:72px;text-align:left;padding:15px 16px}
+.matchmaking-options strong{font-size:16px}
+.matchmaking-options small{font-size:11px;color:#999}
+.matchmaking-card{display:grid;gap:10px;margin-top:14px;padding:16px;border:1px solid var(--bc-border);border-radius:20px;background:#0b0b0b}
+.matchmaking-card p{margin:0;color:var(--bc-text-muted);font-size:13px;line-height:1.5}
+.matchmaking-step{color:var(--bc-accent);font-size:10px;font-weight:950;letter-spacing:.14em}
+.room-code-card{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;margin:18px 0;padding:16px;border:1px solid #ffd40055;border-radius:20px;background:#ffd4000d}
+.room-code-card strong{grid-column:1/-1;font-size:clamp(34px,12vw,62px);letter-spacing:.16em;color:var(--bc-accent);line-height:1;text-align:center}
+.room-code-card .matchmaking-step{grid-column:1/-1;text-align:center}
+.room-code-card button{grid-column:1/-1;justify-self:center;min-width:100px}
+.lobby-list{display:grid;gap:9px}
+.lobby-player{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:11px;min-height:68px;padding:10px 12px;border:1px solid var(--bc-border);border-radius:17px;background:#0b0b0b}
+.lobby-avatar{display:grid;place-items:center;width:40px;height:40px;border:1px dashed #ffffff38;border-radius:50%;color:#777;font-size:18px}
+.lobby-avatar.filled{border-style:solid;background:var(--bc-accent);color:#050505;font-weight:1000}
+.lobby-player b,.lobby-player small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lobby-player b{font-size:13px}.lobby-player small{margin-top:3px;color:#888;font-size:10px}
+.lobby-status{font-size:9px;font-weight:950;letter-spacing:.1em;color:var(--bc-accent)}
+.lobby-footer{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:18px;color:#aaa;font-size:12px}
+.connection-dot{width:8px;height:8px;border-radius:50%;background:#ffd400;box-shadow:0 0 0 4px #ffd40020;animation:arcade-pulse 1.4s ease-in-out infinite}
+@media(max-width:650px){.matchmaking-shell .room-head h1{font-size:39px}.room-code-card strong{font-size:clamp(30px,11vw,48px)}.lobby-player{min-height:64px}}
