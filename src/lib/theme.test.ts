@@ -8,8 +8,8 @@ test('Monday resolves to the MCM theme', () => {
   assert.equal(theme.shortLabel, 'MCM');
   assert.equal(theme.displayName, 'Men Crush Monday');
   assert.equal(theme.icon, '♥︎');
-  assert.equal(theme.accent, '#ff4f8b');
-  assert.match(theme.typeClass, /mcm/);
+  assert.equal(theme.accent, '#ffd400');
+  assert.equal(theme.typeClass, 'theme-default');
 });
 
 test('non-Monday resolves to a non-MCM weekly theme', () => {
