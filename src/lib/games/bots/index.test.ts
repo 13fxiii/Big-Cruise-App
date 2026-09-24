@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { BOT_DIFFICULTIES, botProfile, chessBotMove, connect4BotColumn, ludoBotPiece, partyBotAnswer, tictactoeBotMove } from './index.ts';
+import { BOT_DIFFICULTIES, botProfile, chessBotMove, connect4BotColumn, drawBotGuess, ludoBotPiece, partyBotAnswer, tictactoeBotMove, unoBotCard } from './index.ts';
 import { createChessState } from '../chess/rules.ts';
 import { createLudoState, rollDice } from '../ludo/rules.ts';
 import { firstRound } from '../party/rules.ts';
@@ -30,4 +30,11 @@ test('chess bot returns a legal move and ludo bot returns a movable piece', () =
 test('party bot answers correctly at elite difficulty', () => {
   const round=firstRound('kahoot');
   assert.equal(partyBotAnswer(round,'elite',()=>0),round.answer);
+});
+
+test('UNO and drawing adapters scale from uncertain to accurate play', () => {
+  const cards=[{id:'number',kind:'number' as const,value:3},{id:'wild',kind:'wild' as const}];
+  assert.equal(unoBotCard(cards,'elite',()=>0)?.id,'wild');
+  assert.equal(drawBotGuess('sun','elite',()=>0),'sun');
+  assert.equal(drawBotGuess('sun','easy',()=>0),'cruise');
 });
