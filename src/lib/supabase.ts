@@ -9,5 +9,12 @@ const DEFAULT_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_jM4eku7b7m_GG264BCMeyg_
 const url = (import.meta.env.VITE_SUPABASE_URL as string | undefined) || DEFAULT_SUPABASE_URL;
 const key = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) || DEFAULT_SUPABASE_PUBLISHABLE_KEY;
 
-export const supabase = createClient(url, key);
+export const supabase = createClient(url, key, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    storageKey: 'big-cruise-auth',
+  },
+});
 export const UNO_FUNCTION_URL = `${url}/functions/v1/uno`;
