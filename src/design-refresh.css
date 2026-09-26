@@ -1,0 +1,60 @@
+/* BIG CRUISE Phase 1 visual foundation: flat surfaces, loud type, day-aware accents. */
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@700&display=swap');
+
+:root {
+  --bc-black: #0B0B0B;
+  --bc-black-2: #141414;
+  --bc-black-3: #1E1E1E;
+  --bc-yellow: #F5C400;
+  --bc-yellow-bright: #FFD700;
+  --bc-white: #F7F7F2;
+  --bc-gray: #9A9A92;
+  --bc-gray-dark: #5A5A55;
+  --bc-red: #FF3B30;
+  --bc-green: #35D07F;
+  --bc-blue: #2563EB;
+  --motion-fast: 150ms;
+  --motion-base: 250ms;
+  --motion-slow: 400ms;
+  --motion-spring: cubic-bezier(.34,1.56,.64,1);
+  --motion-smooth: cubic-bezier(.4,0,.2,1);
+}
+
+html, body, #root { background: var(--bc-black); color: var(--bc-white); }
+body { font-family: 'Space Grotesk', system-ui, sans-serif; }
+button, input, textarea { border-radius: 4px; }
+button { min-height: 44px; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid var(--day-accent, var(--bc-yellow)); outline-offset: 3px; }
+.app { background: var(--bc-black); }
+.app-header { height: 68px; padding-inline: clamp(16px, 4vw, 48px); background: var(--bc-black); border-bottom: 2px solid var(--bc-black-3); backdrop-filter: none; }
+.brand { font-family: 'Archivo Black', sans-serif; letter-spacing: -.08em; font-size: 20px; }
+.brand span { color: var(--bc-yellow); }
+.theme-badge { border-radius: 3px; border-color: var(--day-accent, var(--bc-yellow)); background: var(--bc-black-2); color: var(--bc-white); }
+.avatar-button { min-width: 44px; width: 44px; padding: 0; border: 2px solid var(--day-accent, var(--bc-yellow)); border-radius: 50%; background: var(--bc-white); color: var(--bc-black); font: 700 12px 'JetBrains Mono', monospace; }
+.page { max-width: 1180px; padding-inline: clamp(16px, 4vw, 48px); }
+.eyebrow, .day-kicker, .game-art i { font-family: 'JetBrains Mono', monospace; }
+.today h1, .section-head h1, .merch-hero h1, .empty-page h1 { font-family: 'Archivo Black', sans-serif; letter-spacing: -.07em; }
+.today h1 { max-width: 850px; }
+.today { position: relative; padding-block: clamp(48px, 10vw, 120px); }
+.today::before { content: ''; position: absolute; left: -48px; top: 26px; width: 10px; height: 120px; background: var(--day-accent, var(--bc-yellow)); }
+.challenge, .promo-row, .uno-entry, .coming, .product, .cart-panel, .store-message { background: var(--bc-black-2); border: 2px solid var(--bc-black-3); box-shadow: none; }
+.primary { background: var(--bc-yellow); color: var(--bc-black); border-color: var(--bc-yellow); }
+.primary:hover:not(:disabled) { background: var(--bc-yellow-bright); box-shadow: 6px 6px 0 var(--bc-black-3); }
+.game-grid { gap: 12px; }
+.game-card { background: var(--bc-black-2); border: 2px solid var(--bc-black-3); border-radius: 4px; box-shadow: none; text-align: left; transition: transform var(--motion-base) var(--motion-spring), border-color var(--motion-base) var(--motion-smooth); }
+.game-card:hover:not(:disabled) { transform: translateY(-4px); border-color: var(--day-accent, var(--bc-yellow)); background: var(--bc-black-3); }
+.game-art { min-height: 132px; border-radius: 0; }
+.game-art i { position: absolute; left: 10px; bottom: 8px; font-style: normal; font-size: 9px; letter-spacing: .08em; color: var(--bc-white); }
+.game-meta b { font-size: 17px; }
+.game-meta small { color: var(--bc-gray); font-family: 'JetBrains Mono', monospace; }
+.seven-days, .music-hero, .profile-hero { border-color: var(--bc-black-3); border-radius: 4px; background: var(--bc-black-2); }
+.seven-days { --day-accent: var(--day-accent, var(--bc-yellow)); }
+.day-feature { border-radius: 4px; }
+.day-copy h3 { font-family: 'Archivo Black', sans-serif; }
+.bottom-nav { background: var(--bc-black); border-top: 2px solid var(--bc-black-3); backdrop-filter: none; }
+.bottom-nav button { border-radius: 4px; color: var(--bc-gray); }
+.bottom-nav button.selected { color: var(--bc-white); border: 2px solid var(--day-accent, var(--bc-yellow)); background: var(--bc-black-2); box-shadow: none; }
+.bottom-nav button span { font: 700 11px 'JetBrains Mono', monospace; }
+.preview-banner { border-radius: 0; }
+@media (max-width: 650px) { .page { padding-inline: 12px; } .today::before { left: -12px; } .signout-button { display: none; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }

@@ -1,8 +1,9 @@
 export type GameStatus = 'playable' | 'coming-soon';
-export type CruiseGame = { id: string; name: string; icon: string; description: string; status: GameStatus; accent: string; featuredDays: string[] };
+export type GameCategory = 'Cards' | 'Boards' | 'Party' | 'Strategy' | 'Quick';
+export type CruiseGame = { id: string; name: string; icon: string; description: string; status: GameStatus; accent: string; featuredDays: string[]; category?: GameCategory; players?: string; duration?: string };
 
 export const GAMES: CruiseGame[] = [
-  { id: 'uno', name: 'UNO', icon: '🃏', description: 'Real-time card battles with your Cruise crew.', status: 'playable', accent: '#ff3b30', featuredDays: ['mcm','titty-tuesday','wild-n-out-sunday'] },
+  { id: 'uno', name: 'UNO', icon: '01', description: 'Real-time card battles with your Cruise crew.', status: 'playable', accent: '#ff3b30', category: 'Cards', players: '2–4', duration: '10 min', featuredDays: ['mcm','titty-tuesday','wild-n-out-sunday'] },
   { id: 'ludo', name: 'Ludo', icon: '🎲', description: 'Race your pieces home and take the Cruise.', status: 'playable', accent: '#ffd400', featuredDays: ['throwback-thursday'] },
   { id: 'tictactoe', name: 'Tic-Tac-Toe', icon: '⭕', description: 'Quick marks. Big energy. First to three.', status: 'playable', accent: '#22d3ee', featuredDays: ['mcm'] },
   { id: 'connect4', name: 'Connect Four', icon: '🔴', description: 'Drop four in a row before they do.', status: 'playable', accent: '#ef3340', featuredDays: ['throwback-thursday'] },
