@@ -4,6 +4,7 @@ import { supabase, UNO_FUNCTION_URL } from './lib/supabase';
 import './styles.css';
 import './design-refresh.css';
 import './auth-refresh.css';
+import './glass-system.css';
 import { getWeeklyTheme } from './lib/theme';
 import { GAMES } from './lib/cruise/catalog';
 import { addToCart, loadCart, loadStore, placeOrder, setCartQty } from './lib/cruise/store';
