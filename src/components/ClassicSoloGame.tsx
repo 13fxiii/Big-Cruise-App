@@ -3,6 +3,7 @@ import { createChessState, legalMoves, makeMove, type ChessMove, type ChessState
 import { createLudoState, currentPlayer as ludoCurrent, legalPieceIds, movePiece, rollDice, type LudoState } from '../lib/games/ludo/rules';
 import { callUno, canPlayCard, createGame, currentPlayer as unoCurrent, drawCard, getLegalPlays, playCard, topCard, type UnoColor, type UnoState } from '../lib/games/uno/rules';
 import { chessBotMove, ludoBotPiece, unoBotCard, type BotDifficulty } from '../lib/games/bots';
+import { RealtimeLobby } from './RealtimeLobby';
 
 export type ClassicGame = 'ludo'|'chess'|'uno'|'draw-it-out';
 type User={id:string};
@@ -11,7 +12,7 @@ const glyphs={king:'♚',queen:'♛',rook:'♜',bishop:'♝',knight:'♞',pawn:'
 export function ClassicGameGate({game,user,multiplayer}:{game:ClassicGame;user:User;multiplayer:React.ReactNode}){
  const [mode,setMode]=useState<'choose'|'solo'|'multi'>('choose');const [difficulty,setDifficulty]=useState<BotDifficulty>('cruise');
  if(mode==='solo')return <><button className="link" onClick={()=>setMode('choose')}>← Game modes</button><ClassicSoloGame game={game} user={user} difficulty={difficulty}/></>;
- if(mode==='multi')return <>{multiplayer}</>;
+ if(mode==='multi')return <><button className="link" onClick={()=>setMode('choose')}>← Game modes</button><RealtimeLobby game={game} user={user}>{multiplayer}</RealtimeLobby></>;
  const title=game==='draw-it-out'?'Draw It Out':game.toUpperCase();
  return <section className="onmuga-shell matchmaking-shell"><span className="eyebrow">BIG CRUISE ARCADE · {title}</span><h1>How do you want to play?</h1><p className="muted">Start a solo match with Cruise Bot or open the realtime room flow for your crew.</p><div className="matchmaking-options"><button className="primary" onClick={()=>setMode('solo')}><strong>Solo with Cruise Bot</strong><small>Mobile-first practice with adjustable difficulty</small></button><button onClick={()=>setMode('multi')}><strong>Multiplayer room</strong><small>Invite friends or join a live room</small></button></div><div className="bot-difficulty-grid compact-bot-grid">{(['easy','cruise','pro','elite'] as BotDifficulty[]).map(level=><button key={level} className={difficulty===level?'selected':''} onClick={()=>setDifficulty(level)}><strong>{level[0].toUpperCase()+level.slice(1)}</strong><small>{level==='easy'?'Relaxed':level==='cruise'?'Balanced':level==='pro'?'Sharp':'Elite'}</small></button>)}</div></section>;
 }

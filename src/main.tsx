@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { supabase, UNO_FUNCTION_URL } from './lib/supabase';
 import './styles.css';
@@ -15,20 +15,21 @@ import { isMyTurn } from './lib/games/uno/view-model';
 import { createLudoState, currentPlayer as ludoCurrentPlayer, legalPieceIds, movePiece as moveLudoPiece, rollDice as rollLudoDice, type LudoState } from './lib/games/ludo/rules';
 import { createChessState, legalMoves as chessLegalMoves, makeMove as makeChessMove, type ChessColor, type ChessPieceKind, type ChessState } from './lib/games/chess/rules';
 import { CruisePartyGame } from './components/CruisePartyGame';
-import { MemberProfile } from './components/MemberProfile';
 import { touchFeedback } from './lib/feedback';
 import { SevenDaysCruise } from './components/SevenDaysCruise';
 import { QuizRushGame } from './components/QuizRushGame';
 import { StrategySoloGame } from './components/StrategySoloGame';
-import { MusicHub } from './components/MusicHub';
 import { BoardModeGate } from './components/BoardSoloGame';
 import { BottomNav, type PrimaryTab } from './components/BottomNav';
-import { CommunityHub } from './components/CommunityHub';
 
 type User={id:string;email?:string};
 type Player={id:string;displayName:string;avatarUrl?:string|null;hand?:UnoCard[];handCount:number;ready:boolean};
 type State={phase:'lobby'|'playing'|'finished';players:Player[];discardPile:UnoCard[];drawPileCount:number;currentPlayerIndex:number;currentColor:string;winnerId?:string;pendingUnoPlayerId?:string};
 type Tab=PrimaryTab|'merch';
+const MusicHub = lazy(() => import('./components/MusicHub').then((module) => ({ default: module.MusicHub })));
+const CommunityHub = lazy(() => import('./components/CommunityHub').then((module) => ({ default: module.CommunityHub })));
+const MemberProfile = lazy(() => import('./components/MemberProfile').then((module) => ({ default: module.MemberProfile })));
+const LazyFallback = () => <main className="page"><section className="empty-page"><span className="eyebrow">BIG CRUISE〽️</span><h1>Loading the room…</h1></section></main>;
 
 async function api(action:string,data:Record<string,unknown>={}){const {data:{session}}=await supabase.auth.getSession();const r=await fetch(UNO_FUNCTION_URL,{method:'POST',headers:{Authorization:`Bearer ${session?.access_token||''}`,'content-type':'application/json'},body:JSON.stringify({action,...data})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Request failed');return j;}
 const cardLabel=(c:UnoCard)=>c.kind==='number'?String(c.value):({skip:'⊘',reverse:'↻',draw2:'+2',wild:'WILD',wild4:'+4'} as Record<string,string>)[c.kind];
@@ -204,7 +205,7 @@ function App(){
   if(!user&&!preview)return <main className="auth"><div className="auth-orbit" aria-hidden="true"><span>🃏</span><span>🎲</span><span>♟️</span></div><div className="logo">BIG CRUISE<span>〽️</span></div><ThemeBadge theme={theme}/><h1 className="auth-title">Pull up. Play loud.</h1><p className="auth-subtitle">Your seat is waiting. Sign in to enter the games, rooms and weekly challenges.</p><Login onUser={setUser}/><a className="preview-link" href="/?preview=1">Preview 7 Days of Cruise without signing in</a></main>;
   const activeUser=user||{id:'preview-user',email:'preview@bigcruise.local'};
   const signOut=()=>{if(preview){window.location.href='/';return}void supabase.auth.signOut()};
-  return <div className={`app ${theme.typeClass}`} style={{'--day-accent':theme.accent,'--day-accent-alt':theme.accentAlt,'--day-accent-strong':theme.accentStrong,'--day-accent-soft':theme.accentSoft} as React.CSSProperties}>{preview&&<div className="preview-banner" role="status">Read-only preview mode · no account or game results are saved <a href="/">Return to login</a></div>}<Header theme={theme} onTab={setTab} onSignOut={signOut} preview={preview}/>{tab==='home'&&<Home theme={theme} onTab={setTab} onThemeChange={setTheme}/>}{tab==='games'&&<Games theme={theme} user={activeUser}/>}{tab==='music'&&<MusicHub/>}{tab==='merch'&&!preview&&<Merch/>}{tab==='community'&&<CommunityHub/>}{tab==='profile'&&<MemberProfile email={activeUser.email}/>}<BottomNav tab={tab==='merch'?'profile':tab as PrimaryTab} onTab={setTab}/></div>;
+  return <div className={`app ${theme.typeClass}`} style={{'--day-accent':theme.accent,'--day-accent-alt':theme.accentAlt,'--day-accent-strong':theme.accentStrong,'--day-accent-soft':theme.accentSoft} as React.CSSProperties}>{preview&&<div className="preview-banner" role="status">Read-only preview mode · no account or game results are saved <a href="/">Return to login</a></div>}<Header theme={theme} onTab={setTab} onSignOut={signOut} preview={preview}/><Suspense fallback={<LazyFallback/>}>{tab==='home'&&<Home theme={theme} onTab={setTab} onThemeChange={setTheme}/>} {tab==='games'&&<Games theme={theme} user={activeUser}/>} {tab==='music'&&<MusicHub/>} {tab==='merch'&&!preview&&<Merch/>} {tab==='community'&&<CommunityHub userId={preview?undefined:activeUser.id}/>} {tab==='profile'&&<MemberProfile email={activeUser.email}/>}</Suspense><BottomNav tab={tab==='merch'?'profile':tab as PrimaryTab} onTab={setTab}/></div>;
 }
  function Login({onUser}:{onUser:(u:User)=>void}){const [email,setEmail]=useState('');const [password,setPassword]=useState('');const [signup,setSignup]=useState(false);const [error,setError]=useState('');return <form className="auth-form" aria-label={signup?'Create a BIG CRUISE account':'Sign in to BIG CRUISE'} onSubmit={async e=>{e.preventDefault();setError('');const r=signup?await supabase.auth.signUp({email,password}):await supabase.auth.signInWithPassword({email,password});if(r.error)setError(r.error.message);else if(r.data.user)onUser({id:r.data.user.id,email:r.data.user.email})}}><label htmlFor="auth-email">Email address</label><input id="auth-email" name="email" type="email" placeholder="you@example.com" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} required/><label htmlFor="auth-password">Password</label><input id="auth-password" name="password" type="password" placeholder="6+ characters" autoComplete={signup?'new-password':'current-password'} minLength={6} value={password} onChange={e=>setPassword(e.target.value)} required/>{error&&<p className="error" role="alert">{error}</p>}<button className="primary auth-submit" type="submit">{signup?'Create my account':'Enter BIG CRUISE'}</button><button type="button" className="link auth-switch" onClick={()=>{setSignup(!signup);setError('')}}>{signup?'Already have a seat? Sign in':'New here? Create your account'}</button></form>}
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
