@@ -51,10 +51,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .seven-days { --day-accent: var(--day-accent, var(--bc-yellow)); }
 .day-feature { border-radius: 4px; }
 .day-copy h3 { font-family: 'Archivo Black', sans-serif; }
-.bottom-nav { background: var(--bc-black); border-top: 2px solid var(--bc-black-3); backdrop-filter: none; }
-.bottom-nav button { border-radius: 4px; color: var(--bc-gray); }
-.bottom-nav button.selected { color: var(--bc-white); border: 2px solid var(--day-accent, var(--bc-yellow)); background: var(--bc-black-2); box-shadow: none; }
-.bottom-nav button span { font: 700 11px 'JetBrains Mono', monospace; }
+.bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: rgba(7, 7, 7, .96); border-top: 2px solid var(--day-accent, var(--bc-yellow)); box-shadow: 0 -12px 32px rgba(0, 0, 0, .72); backdrop-filter: blur(18px); }
+.bottom-nav button { min-height: 60px; display: grid; place-items: center; align-content: center; gap: 3px; border: 2px solid transparent; border-radius: 10px; color: var(--bc-gray); background: transparent; }
+.bottom-nav button:hover:not(:disabled) { color: var(--bc-white); background: var(--bc-black-2); }
+.bottom-nav button.selected { color: var(--bc-black); border-color: var(--day-accent, var(--bc-yellow)); background: var(--day-accent, var(--bc-yellow)); box-shadow: 0 0 18px color-mix(in srgb, var(--day-accent, var(--bc-yellow)) 28%, transparent); }
+.bottom-nav button span { font: 900 20px 'JetBrains Mono', monospace; line-height: 1; }
+.bottom-nav button small { font: 900 11px 'JetBrains Mono', monospace; letter-spacing: .04em; text-transform: uppercase; }
+@media (max-width: 650px) { .bottom-nav { gap: 5px; padding-inline: 8px; } .bottom-nav button { min-height: 58px; } .bottom-nav button span { font-size: 18px; } .bottom-nav button small { font-size: 10px; } }
 .preview-banner { border-radius: 0; }
 @media (max-width: 650px) { .page { padding-inline: 12px; } .today::before { left: -12px; } .signout-button { display: none; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
