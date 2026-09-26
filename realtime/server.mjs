@@ -22,7 +22,7 @@ const httpServer = http.createServer((req, res) => {
 });
 
 const io = new Server(httpServer, {
-  cors: { origin: '*', methods: ['GET','POST'] },
+  cors: { origin: (process.env.CORS_ORIGINS || '*').split(',').map(s => s.trim()).filter(Boolean), methods: ['GET','POST'] },
   transports: ['websocket','polling'],
 });
 
@@ -44,9 +44,6 @@ async function loadRoom(token, code) {
   if (sessionError) throw sessionError;
   if (playersError) throw playersError;
   if (!session) throw new Error('Game session not found');
-  if (!(players || []).some(p => p.user_id === sb.auth.getUser ? undefined : false)) {
-    // Membership is checked explicitly below with the current user's id.
-  }
   return { session, players: players || [], sb };
 }
 
@@ -170,7 +167,20 @@ io.on('connection', socket => {
         size:Math.max(1,Math.min(40,Number(stroke.size||5))),
         tool:stroke.tool,
       };
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/onmuga`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'draw', roomId: room.sessionId, stroke: clean }),
+      });
+      if (!response.ok) {
+        const detail = await response.text();
+        throw new Error(detail || 'Draw action rejected');
+      }
+      const payload = await response.json().catch(() => null);
+      room.state = payload?.state || room.state;
+      room.version = Number(payload?.version ?? room.version);
       io.to(`game:${code}`).emit('draw:stroke', {stroke:clean, by:user.id});
+      emitState(room);
     } catch(e) {
       socket.emit('room:error',{message:e instanceof Error?e.message:'Stroke rejected'});
     }
