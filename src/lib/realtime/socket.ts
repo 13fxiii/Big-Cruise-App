@@ -1,8 +1,7 @@
 import { io, type Socket } from 'socket.io-client';
 import { supabase } from '../supabase';
 
-const DEFAULT_REALTIME_URL = 'https://big-cruise-realtime-production.up.railway.app';
-const REALTIME_URL = (import.meta.env.VITE_REALTIME_URL as string | undefined) || DEFAULT_REALTIME_URL;
+const REALTIME_URL = (import.meta.env.VITE_REALTIME_URL as string | undefined) || '';
 
 let socket: Socket | null = null;
 let tokenInUse = '';
@@ -11,6 +10,7 @@ export async function getRealtimeSocket(): Promise<Socket> {
   const { data: { session } } = await supabase.auth.getSession();
   const token = session?.access_token;
   if (!token) throw new Error('Authentication required');
+  if (!REALTIME_URL) throw new Error('Realtime service is not configured');
 
   if (socket?.connected && tokenInUse === token) return socket;
 
