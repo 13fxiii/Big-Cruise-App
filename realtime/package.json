@@ -1,0 +1,17 @@
+{
+  "name": "big-cruise-realtime",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@ayshrj/ludo.js": "1.0.10",
+    "@bezier/werewolf-server": "0.6.0",
+    "@supabase/supabase-js": "^2.57.0",
+    "socket.io": "4.8.4",
+    "uno-engine": "2.0.3"
+  }
+}
