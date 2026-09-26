@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { useSessionSync } from '../lib/games/session-sync';
 
 type LobbyPlayer = { user_id: string; display_name: string; seat: number | null; is_host: boolean; ready: boolean };
 
@@ -11,6 +12,7 @@ export function RealtimeLobby({ game, user, children }: Props) {
   const [players, setPlayers] = useState<LobbyPlayer[]>([]);
   const [status, setStatus] = useState<'idle' | 'loading' | 'connected' | 'error'>('idle');
   const [error, setError] = useState('');
+  const sync = useSessionSync<null>({ roomCode: code || undefined, game, actorId: user.id });
 
   const refresh = useCallback(async (roomCode: string) => {
     const [{ data: room, error: roomError }, { data: members, error: membersError }] = await Promise.all([
@@ -47,9 +49,9 @@ export function RealtimeLobby({ game, user, children }: Props) {
     if (rpcError || !payload?.code) { setStatus('error'); setError(rpcError?.message ?? 'Could not join that room'); return; }
     setCode(String(payload.code));
   };
-  const toggleReady = async () => { if (!code) return; await supabase.from('game_players').update({ ready: !players.find((player) => player.user_id === user.id)?.ready }).eq('room_code', code).eq('user_id', user.id); await refresh(code); };
+  const toggleReady = async () => { if (!code) return; const previous = players; const nextReady = !players.find((player) => player.user_id === user.id)?.ready; setPlayers((current) => current.map((player) => player.user_id === user.id ? { ...player, ready: nextReady } : player)); try { await sync.dispatch({ type: 'lobby.ready', payload: { ready: nextReady } }); const result = await supabase.from('game_players').update({ ready: nextReady }).eq('room_code', code).eq('user_id', user.id); if (result.error) throw result.error; await refresh(code); } catch (reason) { setPlayers(previous); setError(reason instanceof Error ? reason.message : 'Ready state rolled back'); } };
 
   if (!code) return <section className="realtime-lobby matchmaking-shell"><span className="eyebrow">REALTIME ROOM · {game.toUpperCase()}</span><h2>Pull up with your crew.</h2><p className="muted">Rooms stay synced across mobile networks. Create one or join with a code.</p><div className="matchmaking-options"><button className="primary" onClick={() => void create()} disabled={status === 'loading'}><strong>Create live room</strong><small>Open a synced lobby for up to four players</small></button><label className="lobby-join"><span>Have a room code?</span><input aria-label="Room code" value={joinCode} onChange={(event) => setJoinCode(event.target.value.toUpperCase())} placeholder="ROOM CODE" maxLength={8}/><button onClick={() => void join()} disabled={status === 'loading' || joinCode.length < 4}>Join room</button></label></div>{error && <p className="error" role="alert">{error}</p>}</section>;
   const me = players.find((player) => player.user_id === user.id);
-  return <section className="realtime-lobby"><div className="room-code-card"><span className="eyebrow">LIVE ROOM · {status === 'connected' ? 'SYNCED' : 'RECONNECTING'}</span><strong>{code}</strong><small>{players.length}/4 seats · invite your crew</small></div><div className="lobby-player-list">{players.map((player) => <div className="lobby-player" key={player.user_id}><span className="connection-dot"/><b>{player.display_name}{player.user_id === user.id ? ' · You' : ''}</b><small>{player.ready ? 'READY' : 'NOT READY'}</small></div>)}</div><div className="lobby-actions"><button className="primary" onClick={() => void toggleReady()}>{me?.ready ? 'Unready' : 'Ready up'}</button><button onClick={() => { setCode(''); setPlayers([]); }}>Change room</button></div>{error && <p className="error" role="alert">{error}</p>}{players.length > 1 && players.every((player) => player.ready) ? children : <p className="muted lobby-waiting">Waiting for everyone to ready up…</p>}</section>;
+  return <section className="realtime-lobby"><div className="room-code-card"><span className="eyebrow">LIVE ROOM · {status === 'connected' ? 'SYNCED' : 'RECONNECTING'} · {sync.pending.length ? `${sync.pending.length} PENDING` : 'CAUGHT UP'}</span><strong>{code}</strong><small>{players.length}/4 seats · invite your crew</small></div><div className="lobby-player-list">{players.map((player) => <div className="lobby-player" key={player.user_id}><span className="connection-dot"/><b>{player.display_name}{player.user_id === user.id ? ' · You' : ''}</b><small>{player.ready ? 'READY' : 'NOT READY'}</small></div>)}</div><div className="lobby-actions"><button className="primary" onClick={() => void toggleReady()}>{me?.ready ? 'Unready' : 'Ready up'}</button><button onClick={() => { setCode(''); setPlayers([]); }}>Change room</button></div>{error && <p className="error" role="alert">{error}</p>}{players.length > 1 && players.every((player) => player.ready) ? children : <p className="muted lobby-waiting">Waiting for everyone to ready up…</p>}</section>;
 }
