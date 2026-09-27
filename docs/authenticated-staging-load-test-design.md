@@ -215,16 +215,19 @@ This phase tests the browser adapter and the server together.
 11. Assert the pending queue is empty after either successful commit or explicit conflict discard.
 12. Assert no duplicate `game_session_actions` record exists for a replayed `action_id`.
 
-### Current implementation gap
+### Execute-hook replay contract
 
-The current `useSessionSync` adapter:
+The `useSessionSync` adapter now supports an optional authoritative executor:
 
 - Persists pending actions.
-- Inserts action envelopes into `game_session_actions`.
-- Replays those envelopes into the action log after reconnect.
-- Rolls back local state when the action-log insert fails.
+- Executes the action immediately when online and an executor is provided.
+- Re-executes queued actions against the original Edge Function after reconnect.
+- Applies returned authoritative state/version data.
+- Discards a resolved conflict after adopting the refreshed authoritative state.
+- Retains the action in the queue when the executor is unavailable or temporarily fails.
+- Rolls back optimistic local state when the executor reports a failure and a rollback function is supplied.
 
-It does **not yet re-execute the original Edge Function action** when replaying a pending action. Therefore, a full Phase E pass cannot honestly be marked green until the adapter receives an executor such as:
+Each game adapter should provide an executor such as:
 
 ```ts
 useSessionSync({
@@ -235,7 +238,7 @@ useSessionSync({
 });
 ```
 
-The staging runner should mark “action-log replay” and “authoritative action replay” as separate checks. The former is testable now; the latter is a required implementation follow-up.
+The staging runner should still mark “action-log replay” and “authoritative action replay” as separate checks. The authoritative replay check is now unblocked, but it remains a failure if a game surface does not supply its Edge Function executor.
 
 ## Runner result schema
 
