@@ -1,0 +1,23 @@
+{
+  "name": "big-cruise-colyseus-server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@colyseus/core": "^0.16.5",
+    "@colyseus/ws-transport": "^0.16.5",
+    "@colyseus/schema": "^3.0.60",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}
